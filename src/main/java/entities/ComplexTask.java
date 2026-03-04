@@ -3,7 +3,7 @@ package entities;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ComplexTask extends Task{
+public final class ComplexTask extends Task{
     private List<Task> subtasks;
 
     public ComplexTask(int idTask)
