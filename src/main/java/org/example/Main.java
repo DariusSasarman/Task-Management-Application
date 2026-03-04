@@ -1,7 +1,11 @@
+package org.example;
+
 import presentation.MainWindow;
 
 import javax.swing.*;
 
-void main() {
-    SwingUtilities.invokeLater(MainWindow :: new);
+public class Main {
+    static void main() {
+        SwingUtilities.invokeLater(MainWindow:: new);
+    }
 }
