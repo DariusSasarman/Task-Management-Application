@@ -3,7 +3,7 @@ package entities;
 import java.io.Serial;
 import java.io.Serializable;
 
-public abstract class Task implements Serializable {
+public abstract sealed class Task implements Serializable permits SimpleTask,ComplexTask{
 
     @Serial
     private static final long serialVersionUID = 1L;
