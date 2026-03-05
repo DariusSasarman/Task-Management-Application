@@ -16,13 +16,15 @@ public class AddEmployeeDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
-    private JTextArea enterTheEmployeeSTextArea;
     private JTextField nameInputTextField;
+    private JLabel employeeNameTextPrompt;
 
     public AddEmployeeDialog(Utilities handler) {
         this.handler = handler;
         setContentPane(contentPane);
         setModal(true);
+        pack();
+        setLocationRelativeTo(null);
         getRootPane().setDefaultButton(buttonOK);
 
         buttonOK.addActionListener(new ActionListener() {
@@ -55,27 +57,30 @@ public class AddEmployeeDialog extends JDialog {
 
     private void onOK() {
 
-        String name = nameInputTextField.getText();
-        if (name == null || name.isEmpty()) {
-            throw new RuntimeException("The employee should have a name");
-        }
-
-        boolean retry;
-        do {
-            retry = false;
-            try {
-                Employee added = new Employee((int) UUID.randomUUID().getLeastSignificantBits(), name);
-                handler.addEmployee(added);
-            } catch (RuntimeException e) {
-                if (e.getMessage().equals("Employee UUID Already exists")) {
-                    retry = true;
-                } else {
-                    throw new RuntimeException(e);
-                }
+        try {
+            String name = nameInputTextField.getText();
+            if (name == null || name.isEmpty()) {
+                throw new RuntimeException("The employee should have a name");
             }
-        } while (retry);
-
-        dispose();
+            boolean retry;
+            do {
+                retry = false;
+                try {
+                    Employee added = new Employee((int) UUID.randomUUID().getLeastSignificantBits(), name);
+                    handler.addEmployee(added);
+                } catch (RuntimeException e) {
+                    if (e.getMessage().equals("Employee UUID Already exists")) {
+                        retry = true;
+                    } else {
+                        throw new RuntimeException(e);
+                    }
+                }
+            } while (retry);
+        } catch (RuntimeException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            dispose();
+        }
     }
 
     private void onCancel() {
@@ -114,15 +119,14 @@ public class AddEmployeeDialog extends JDialog {
         buttonCancel.setText("Cancel");
         panel2.add(buttonCancel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel3 = new JPanel();
-        panel3.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
+        panel3.setLayout(new GridLayoutManager(4, 1, new Insets(0, 0, 0, 0), -1, -1));
         contentPane.add(panel3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        enterTheEmployeeSTextArea = new JTextArea();
-        enterTheEmployeeSTextArea.setAlignmentX(0.5f);
-        enterTheEmployeeSTextArea.setEditable(false);
-        enterTheEmployeeSTextArea.setText("Enter the Employee's Name:");
-        panel3.add(enterTheEmployeeSTextArea, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
         nameInputTextField = new JTextField();
-        panel3.add(nameInputTextField, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        nameInputTextField.setEditable(true);
+        panel3.add(nameInputTextField, new GridConstraints(1, 0, 3, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        employeeNameTextPrompt = new JLabel();
+        employeeNameTextPrompt.setText("Please enter the employee's name:");
+        panel3.add(employeeNameTextPrompt, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**

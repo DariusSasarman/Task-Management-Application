@@ -45,12 +45,8 @@ public class MainWindow extends JFrame {
 
     private void addEmployeePrompt()
     {
-        try {
-            JDialog addEmployeeDialog = new AddEmployeeDialog(handler);
-            addEmployeeDialog.setVisible(true);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this,e.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
-        }
+        JDialog addEmployeeDialog = new AddEmployeeDialog(handler);
+        addEmployeeDialog.setVisible(true);
     }
 
 
