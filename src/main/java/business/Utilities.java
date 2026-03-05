@@ -3,6 +3,8 @@ package business;
 import dao.AssignmentDao;
 import dao.EntityDao;
 import entities.Employee;
+import entities.SimpleTask;
+import entities.Task;
 
 import java.util.*;
 
@@ -50,5 +52,11 @@ public class Utilities {
 
     public void removeEmployee(Employee target) {
         taskManager.removeEmployee(target);
+    }
+
+    public void addTask(SimpleTask added) {taskManager.addTask(added);}
+
+    public List<Task> getTasks() {
+        return taskManager.getTaskList();
     }
 }
