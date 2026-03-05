@@ -74,4 +74,8 @@ class TasksManagement {
         AssignmentStorage.securePersistence();
         EntityStorage.securePersistence();
     }
+
+    public void addEmployee(Employee added) {
+        EntityStorage.addEmployee(added);
+    }
 }

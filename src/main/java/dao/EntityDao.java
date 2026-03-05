@@ -46,6 +46,10 @@ public class EntityDao implements Serializable {
 
     public void addEmployee(Employee added)
     {
+        if(employees.containsKey(added.getIdEmployee()))
+        {
+            throw new RuntimeException("Employee UUID Already exists");
+        }
         employees.put(added.getIdEmployee(),added);
     }
 

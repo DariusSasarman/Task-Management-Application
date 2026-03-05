@@ -40,6 +40,17 @@ public class MainWindow extends JFrame {
             public void windowClosing(WindowEvent e) { handler.save(); dispose(); }
         });
         /// Button actions
+        addEmployeeButton.addActionListener(e -> addEmployeePrompt());
+    }
+
+    private void addEmployeePrompt()
+    {
+        try {
+            JDialog addEmployeeDialog = new AddEmployeeDialog(handler);
+            addEmployeeDialog.setVisible(true);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,e.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+        }
     }
 
 

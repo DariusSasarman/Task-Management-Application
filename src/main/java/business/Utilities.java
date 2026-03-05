@@ -39,4 +39,8 @@ public class Utilities {
     {
         taskManager.securePersistence();
     }
+
+    public void addEmployee(Employee added) {
+        taskManager.addEmployee(added);
+    }
 }
