@@ -53,7 +53,7 @@ public class EntityDao implements Serializable {
         employees.put(added.getIdEmployee(),added);
     }
 
-    public List<Employee> getEmployeeList() { return (ArrayList<Employee>) employees.values();}
+    public List<Employee> getEmployeeList() { return new ArrayList<>(employees.values());}
 
     public Task getTask(int idTask) {
         return tasks.get(idTask);
@@ -63,5 +63,5 @@ public class EntityDao implements Serializable {
         tasks.put(added.getIdTask(),added);
     }
 
-    public List<Task> getTaskList() { return (ArrayList<Task>) tasks.values();}
+    public List<Task> getTaskList() { return new ArrayList<>(tasks.values());}
 }

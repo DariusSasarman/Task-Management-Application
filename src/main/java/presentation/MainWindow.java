@@ -1,16 +1,26 @@
 package presentation;
 
 import business.Utilities;
+import com.intellij.uiDesigner.core.GridConstraints;
+import com.intellij.uiDesigner.core.GridLayoutManager;
+import entities.Employee;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainWindow extends JFrame {
 
     private Utilities handler;
-    private JTabbedPane tabbedPane1;
+
+    private JScrollPane scrollPane1;
     private JPanel panel1;
     private JButton addEmployeeButton;
     private JButton addTaskButton;
@@ -20,6 +30,15 @@ public class MainWindow extends JFrame {
     private JButton employeeStatusButton;
     private JButton deleteEmployeeButton;
     private JButton deleteTaskButton;
+
+    private JTabbedPane tabbedPane1;
+    private JScrollPane assignedTasksJScrollPane;
+    private JScrollPane employeesJScrollPane;
+    private JTable employeeTable;
+
+    private JScrollPane tasksJScrollPane;
+
+
 
     public MainWindow() {
         setTitle("Employee Task Manager");
@@ -31,22 +50,74 @@ public class MainWindow extends JFrame {
         setVisible(true);
     }
 
-    private void setup()
-    {
+    private void setup() {
         /// Handler connection to lower layers
         this.handler = new Utilities();
+        /// Setting up the tab panels
+        loadAssignedTasks();
+        loadTasks();
+        loadAssignedTasks();
+        loadEmployeeData();
         /// Exit operation setup
         addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) { handler.save(); dispose(); }
+            public void windowClosing(WindowEvent e) {
+                handler.save();
+                dispose();
+            }
+        });
+        /// Setup Tab options
+        tabbedPane1.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                JTabbedPane sourceTabbedPane = (JTabbedPane) e.getSource();
+                int index = sourceTabbedPane.getSelectedIndex();
+
+                switch (sourceTabbedPane.getTitleAt(index)) {
+                    case "Assigned Tasks":
+                        loadAssignedTasks();
+                        break;
+                    case "Employees":
+                        loadEmployeeData();
+                        break;
+                    case "Tasks":
+                        loadTasks();
+                        break;
+                    default:
+                        break;
+                }
+            }
         });
         /// Button actions
         addEmployeeButton.addActionListener(e -> addEmployeePrompt());
     }
 
-    private void addEmployeePrompt()
-    {
+    private void loadTasks() {
+
+    }
+
+    private void loadEmployeeData() {
+        /// employeeTable
+        employeeTable.setModel(new DefaultTableModel());
+        DefaultTableModel model = (DefaultTableModel) employeeTable.getModel();
+        model.addColumn("UUID");
+        model.addColumn("Name");
+        List<Employee> list = handler.getEmployees();
+        for (Employee e : list) {
+            model.addRow(new Object[]{
+                    e.getIdEmployee(),
+                    e.getName()
+            });
+        }
+    }
+
+    private void loadAssignedTasks() {
+
+    }
+
+    private void addEmployeePrompt() {
         JDialog addEmployeeDialog = new AddEmployeeDialog(handler);
         addEmployeeDialog.setVisible(true);
+        loadEmployeeData();
     }
 
 
@@ -66,47 +137,47 @@ public class MainWindow extends JFrame {
      */
     private void $$$setupUI$$$() {
         panel1 = new JPanel();
-        panel1.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
         tabbedPane1 = new JTabbedPane();
-        panel1.add(tabbedPane1, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(960, 540), new Dimension(1280, 720), null, 0, false));
+        panel1.add(tabbedPane1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(960, 540), new Dimension(960, 540), null, 0, false));
+        assignedTasksJScrollPane = new JScrollPane();
+        tabbedPane1.addTab("Assigned Tasks", assignedTasksJScrollPane);
+        employeesJScrollPane = new JScrollPane();
+        tabbedPane1.addTab("Employees", employeesJScrollPane);
+        employeeTable = new JTable();
+        employeesJScrollPane.setViewportView(employeeTable);
+        tasksJScrollPane = new JScrollPane();
+        tabbedPane1.addTab("Tasks", tasksJScrollPane);
+        scrollPane1 = new JScrollPane();
+        scrollPane1.setHorizontalScrollBarPolicy(31);
+        panel1.add(scrollPane1, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(200, -1), new Dimension(200, -1), null, 0, false));
         final JPanel panel2 = new JPanel();
-        panel2.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-        tabbedPane1.addTab("Assigned Tasks", panel2);
-        final JPanel panel3 = new JPanel();
-        panel3.setLayout(new GridBagLayout());
-        tabbedPane1.addTab("Employees", panel3);
-        final JPanel panel4 = new JPanel();
-        panel4.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-        tabbedPane1.addTab("Tasks", panel4);
-        final JScrollPane scrollPane1 = new JScrollPane();
-        panel1.add(scrollPane1, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(130, -1), new Dimension(130, -1), null, 0, false));
-        final JPanel panel5 = new JPanel();
-        panel5.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(8, 2, new Insets(20, 0, 20, 0), -1, -1));
-        scrollPane1.setViewportView(panel5);
+        panel2.setLayout(new GridLayoutManager(8, 2, new Insets(20, 0, 20, 0), -1, -1));
+        scrollPane1.setViewportView(panel2);
         addEmployeeButton = new JButton();
         addEmployeeButton.setText("Add Employee");
-        panel5.add(addEmployeeButton, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel2.add(addEmployeeButton, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         addTaskButton = new JButton();
         addTaskButton.setText("Add Task");
-        panel5.add(addTaskButton, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel2.add(addTaskButton, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         assignTaskToEmployeeButton = new JButton();
         assignTaskToEmployeeButton.setText("Assign Task to Employee");
-        panel5.add(assignTaskToEmployeeButton, new com.intellij.uiDesigner.core.GridConstraints(4, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel2.add(assignTaskToEmployeeButton, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         modifyTaskStatusButton = new JButton();
         modifyTaskStatusButton.setText("Modify Assigned Task Status");
-        panel5.add(modifyTaskStatusButton, new com.intellij.uiDesigner.core.GridConstraints(5, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel2.add(modifyTaskStatusButton, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         employeeRankingButton = new JButton();
         employeeRankingButton.setText("Display employee ranking");
-        panel5.add(employeeRankingButton, new com.intellij.uiDesigner.core.GridConstraints(6, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel2.add(employeeRankingButton, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         employeeStatusButton = new JButton();
         employeeStatusButton.setText("Display Employee Status");
-        panel5.add(employeeStatusButton, new com.intellij.uiDesigner.core.GridConstraints(7, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel2.add(employeeStatusButton, new GridConstraints(7, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         deleteEmployeeButton = new JButton();
         deleteEmployeeButton.setText("Remove Employee");
-        panel5.add(deleteEmployeeButton, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel2.add(deleteEmployeeButton, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         deleteTaskButton = new JButton();
         deleteTaskButton.setText("Remove Task");
-        panel5.add(deleteTaskButton, new com.intellij.uiDesigner.core.GridConstraints(3, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel2.add(deleteTaskButton, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**

@@ -43,4 +43,8 @@ public class Utilities {
     public void addEmployee(Employee added) {
         taskManager.addEmployee(added);
     }
+
+    public List<Employee> getEmployees() {
+        return taskManager.getEmployeeList();
+    }
 }
