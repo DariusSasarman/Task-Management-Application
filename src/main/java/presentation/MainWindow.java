@@ -95,6 +95,10 @@ public class MainWindow extends JFrame {
             new RemoveEmployeeDialog(handler).setVisible(true);
             loadEmployeeData();
         });
+        addTaskButton.addActionListener(e -> {
+            new SelectTaskTypeDialog(handler).setVisible(true);
+            loadTasks();
+        });
     }
 
     private void loadTasks() {
