@@ -53,6 +53,11 @@ public class EntityDao implements Serializable {
         employees.put(added.getIdEmployee(),added);
     }
 
+    public void removeEmployee(Employee target) {
+        if(!employees.containsKey(target.getIdEmployee()))return;
+        employees.remove(target.getIdEmployee());
+    }
+
     public List<Employee> getEmployeeList() { return new ArrayList<>(employees.values());}
 
     public Task getTask(int idTask) {

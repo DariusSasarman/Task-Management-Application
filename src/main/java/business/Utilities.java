@@ -47,4 +47,8 @@ public class Utilities {
     public List<Employee> getEmployees() {
         return taskManager.getEmployeeList();
     }
+
+    public void removeEmployee(Employee target) {
+        taskManager.removeEmployee(target);
+    }
 }

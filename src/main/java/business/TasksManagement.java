@@ -78,4 +78,8 @@ class TasksManagement {
     public void addEmployee(Employee added) {
         EntityStorage.addEmployee(added);
     }
+
+    public void removeEmployee(Employee target) {
+        EntityStorage.removeEmployee(target);
+    }
 }
