@@ -4,30 +4,41 @@ import business.Utilities;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import entities.ComplexTask;
 import entities.SimpleTask;
+import entities.Task;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.UUID;
 
-public class AddSimpleTaskDialog extends JDialog {
+public class AddComplexTaskDialog extends JDialog {
     private Utilities handler;
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
-    private JLabel startHourText;
-    private JLabel endHourText;
-    private JTextField startHourInput;
-    private JTextField endHourInput;
+    private JLabel JLabel1;
+    private JScrollPane taskListJScrollPane;
+    private JPanel taskListJPanel;
+    private ArrayList<JCheckBox> jCheckBoxes;
 
-    public AddSimpleTaskDialog(Utilities handler) {
+    public AddComplexTaskDialog(Utilities handler) {
         this.handler = handler;
         setContentPane(contentPane);
+        taskListJPanel.setLayout(new BoxLayout(taskListJPanel, BoxLayout.Y_AXIS));
         setModal(true);
         pack();
         setLocationRelativeTo(null);
         getRootPane().setDefaultButton(buttonOK);
+
+        jCheckBoxes = new ArrayList<>();
+
+        for (Task t : handler.getTasks()) {
+            jCheckBoxes.add(new JCheckBox(String.valueOf(t.getIdTask())));
+            taskListJPanel.add(jCheckBoxes.getLast());
+        }
 
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -58,41 +69,38 @@ public class AddSimpleTaskDialog extends JDialog {
     }
 
     private void onOK() {
-        String startHourString = startHourInput.getText();
-        String endHourString = endHourInput.getText();
-        if(startHourString.isEmpty() || endHourString.isEmpty())
-        {
-            JOptionPane.showMessageDialog(null,"Please input a hour in each field!","Error",JOptionPane.ERROR_MESSAGE);
-            dispose();
-        }
-
-        try
-        {
-            int startHourVal = Integer.parseInt(startHourString);
-            int endHourVal = Integer.parseInt(endHourString);
-            if(endHourVal < startHourVal) throw new RuntimeException("End hour comes after start hour!");
-            boolean repeat;
-            do {
-                repeat = false;
-                try
+        boolean anyChecked = false;
+        ComplexTask added = new ComplexTask(Math.abs((int) UUID.randomUUID().getLeastSignificantBits()));
+        boolean repeat;
+        do {
+            repeat = false;
+            try
+            {
+                handler.addTask(added);
+            } catch (RuntimeException e) {
+                if(e.getMessage().equals("Task UUID Already exists"))
                 {
-                    SimpleTask added = new SimpleTask(Math.abs((int) UUID.randomUUID().getLeastSignificantBits()),startHourVal,endHourVal);
-                    handler.addTask(added);
-                } catch (RuntimeException e) {
-                    if(e.getMessage().equals("Task UUID Already exists"))
-                    {
-                        repeat = true;
-                    }
-                    else {
-                        throw new RuntimeException(e.getMessage());
-                    }
+                    added = new ComplexTask(Math.abs((int) UUID.randomUUID().getLeastSignificantBits()));
+                    repeat = true;
                 }
-            }while (repeat);
-
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null,"Please input a NUMBER in each field!", "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null,"Error processing task input:" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                else {
+                    throw new RuntimeException(e.getMessage());
+                }
+            }
+        }while (repeat);
+        for (JCheckBox jCheckBox : jCheckBoxes)
+        {
+            if(jCheckBox.isSelected())
+            {
+                anyChecked = true;
+                int index = jCheckBoxes.indexOf(jCheckBox);
+                added.addTask(handler.getTasks().get(index));
+            }
+        }
+        if(!anyChecked)
+        {
+            JOptionPane.showMessageDialog(null,"Please select at least a task as component", "Error", JOptionPane.ERROR_MESSAGE);
+            handler.removeTask(added);
         }
         dispose();
     }
@@ -133,18 +141,17 @@ public class AddSimpleTaskDialog extends JDialog {
         buttonCancel.setText("Cancel");
         panel2.add(buttonCancel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel3 = new JPanel();
-        panel3.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
+        panel3.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
         contentPane.add(panel3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        startHourText = new JLabel();
-        startHourText.setText("Start Hour:");
-        panel3.add(startHourText, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        endHourText = new JLabel();
-        endHourText.setText("End Hour:");
-        panel3.add(endHourText, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        startHourInput = new JTextField();
-        panel3.add(startHourInput, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        endHourInput = new JTextField();
-        panel3.add(endHourInput, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        JLabel1 = new JLabel();
+        JLabel1.setText("Please select the tasks the new task is composed of:");
+        panel3.add(JLabel1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, 1, 1, null, null, null, 0, false));
+        taskListJScrollPane = new JScrollPane();
+        taskListJScrollPane.setHorizontalScrollBarPolicy(31);
+        panel3.add(taskListJScrollPane, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(-1, 300), new Dimension(-1, 300), null, 0, false));
+        taskListJPanel = new JPanel();
+        taskListJPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        taskListJScrollPane.setViewportView(taskListJPanel);
     }
 
     /**

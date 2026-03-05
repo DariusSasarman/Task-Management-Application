@@ -5,32 +5,31 @@ import dao.EntityDao;
 import entities.Employee;
 import entities.Task;
 
-import java.util.HashMap;
 import java.util.List;
 
 class TasksManagement {
 
-    private AssignmentDao AssignmentStorage;
-    private EntityDao EntityStorage;
+    private AssignmentDao assignmentStorage;
+    private EntityDao entityStorage;
 
     public TasksManagement(EntityDao EntityStorage, AssignmentDao AssignmentStorage)
     {
-        this.AssignmentStorage = AssignmentStorage;
-        this.EntityStorage = EntityStorage;
+        this.assignmentStorage = AssignmentStorage;
+        this.entityStorage = EntityStorage;
     }
 
     public void assignTaskToEmployee(int idEmployee, Task added)
     {
-        Employee target = EntityStorage.getEmployee(idEmployee);
-        if(EntityStorage.getTask(added.getIdTask()) == null) EntityStorage.addTask(added);
-        AssignmentStorage.addTaskToEmployeeList(target,added);
+        Employee target = entityStorage.getEmployee(idEmployee);
+        if(entityStorage.getTask(added.getIdTask()) == null) entityStorage.addTask(added);
+        assignmentStorage.addTaskToEmployeeList(target,added);
     }
 
     public int calculateEmployeeWorkDuration(int idEmployee)
     {
-        Employee target = EntityStorage.getEmployee(idEmployee);
+        Employee target = entityStorage.getEmployee(idEmployee);
         if(target == null) throw new RuntimeException("Target Employee does not exist.");
-        List<Task> list = AssignmentStorage.getTaskList(target);
+        List<Task> list = assignmentStorage.getTaskList(target);
         int returnedSum = 0;
         for(Task t : list)
         {
@@ -43,12 +42,12 @@ class TasksManagement {
     }
 
     public List<Employee> getEmployeeList() {
-        return EntityStorage.getEmployeeList();
+        return entityStorage.getEmployeeList();
     }
 
     public Integer getCompletedCount(int idEmployee) {
         Integer count = 0;
-        for(Task t : AssignmentStorage.getTaskList(EntityStorage.getEmployee(idEmployee)))
+        for(Task t : assignmentStorage.getTaskList(entityStorage.getEmployee(idEmployee)))
         {
             if(t.getStatusTask().equals("Completed"))
             {
@@ -60,7 +59,7 @@ class TasksManagement {
 
     public Integer getUncompletedCount(int idEmployee) {
         Integer count = 0;
-        for(Task t : AssignmentStorage.getTaskList(EntityStorage.getEmployee(idEmployee)))
+        for(Task t : assignmentStorage.getTaskList(entityStorage.getEmployee(idEmployee)))
         {
             if(t.getStatusTask().equals("Uncompleted"))
             {
@@ -71,15 +70,25 @@ class TasksManagement {
     }
 
     public void securePersistence() {
-        AssignmentStorage.securePersistence();
-        EntityStorage.securePersistence();
+        assignmentStorage.securePersistence();
+        entityStorage.securePersistence();
     }
 
     public void addEmployee(Employee added) {
-        EntityStorage.addEmployee(added);
+        entityStorage.addEmployee(added);
     }
 
     public void removeEmployee(Employee target) {
-        EntityStorage.removeEmployee(target);
+        entityStorage.removeEmployee(target);
+    }
+
+    public void addTask(Task added) {entityStorage.addTask(added);}
+
+    public List<Task> getTaskList() {
+        return entityStorage.getTaskList();
+    }
+
+    public void removeTask(Task added) {
+        entityStorage.removeTask(added);
     }
 }

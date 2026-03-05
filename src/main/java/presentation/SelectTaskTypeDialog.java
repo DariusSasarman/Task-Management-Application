@@ -37,12 +37,12 @@ public class SelectTaskTypeDialog extends JDialog {
     }
 
     private void onSimple(Utilities handler) {
-
+        new AddSimpleTaskDialog(handler).setVisible(true);
         dispose();
     }
 
     private void onComplex(Utilities handler) {
-
+        new AddComplexTaskDialog(handler).setVisible(true);
         dispose();
     }
 

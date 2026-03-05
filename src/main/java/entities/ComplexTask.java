@@ -20,7 +20,24 @@ public final class ComplexTask extends Task{
 
     public void addTask(Task added)
     {
+        if(added == this) return;
+        if(subtasks.contains(added))return;
+        if (added instanceof ComplexTask)
+        {
+            if(((ComplexTask) added).containsTask(this))return;
+        }
         subtasks.add(added);
+    }
+
+    public boolean containsTask(Task target) {
+        for (Task t : subtasks) {
+            if (t == target) return true;
+            if (t instanceof ComplexTask)
+            {
+                if(((ComplexTask) t).containsTask(target))return true;
+            }
+        }
+        return false;
     }
 
     public void removeTask(Task target)

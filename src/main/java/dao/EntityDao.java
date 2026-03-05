@@ -73,4 +73,9 @@ public class EntityDao implements Serializable {
     }
 
     public List<Task> getTaskList() { return new ArrayList<>(tasks.values());}
+
+    public void removeTask(Task added) {
+        if(!tasks.containsKey(added.getIdTask())) return;
+        tasks.remove(added.getIdTask());
+    }
 }
