@@ -4,16 +4,15 @@ import business.Utilities;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import entities.Employee;
+import entities.Task;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainWindow extends JFrame {
@@ -37,6 +36,7 @@ public class MainWindow extends JFrame {
     private JTable employeeTable;
 
     private JScrollPane tasksJScrollPane;
+    private JTable tasksTable;
 
 
     public MainWindow() {
@@ -102,7 +102,21 @@ public class MainWindow extends JFrame {
     }
 
     private void loadTasks() {
-
+        tasksTable.setModel(new DefaultTableModel());
+        DefaultTableModel model = (DefaultTableModel) tasksTable.getModel();
+        model.addColumn("UUID");
+        model.addColumn("Status");
+        model.addColumn("Estimated Duration");
+        model.addColumn("Visual Representation");
+        List<Task> list = handler.getTasks();
+        for(Task t : list){
+            model.addRow(new Object[]{
+                    t.getIdTask(),
+                    t.getStatusTask(),
+                    t.estimateDuration(),
+                    t.toString()
+            });
+        }
     }
 
     private void loadEmployeeData() {
@@ -152,6 +166,8 @@ public class MainWindow extends JFrame {
         employeesJScrollPane.setViewportView(employeeTable);
         tasksJScrollPane = new JScrollPane();
         tabbedPane1.addTab("Tasks", tasksJScrollPane);
+        tasksTable = new JTable();
+        tasksJScrollPane.setViewportView(tasksTable);
         scrollPane1 = new JScrollPane();
         scrollPane1.setHorizontalScrollBarPolicy(31);
         panel1.add(scrollPane1, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(200, -1), new Dimension(200, -1), null, 0, false));

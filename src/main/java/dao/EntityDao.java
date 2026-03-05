@@ -65,6 +65,10 @@ public class EntityDao implements Serializable {
     }
 
     public void addTask(Task added) {
+        if(tasks.containsKey(added.getIdTask()))
+        {
+            throw new RuntimeException("Task UUID Already exists");
+        }
         tasks.put(added.getIdTask(),added);
     }
 

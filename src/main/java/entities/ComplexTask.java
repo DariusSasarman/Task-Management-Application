@@ -42,4 +42,22 @@ public final class ComplexTask extends Task{
         }
         return sum;
     }
+
+    @Override
+    public String toString()
+    {
+        StringBuilder ret = new StringBuilder();
+        ret.append(this.getIdTask());
+        ret.append("[ ");
+        for(Task t : subtasks)
+        {
+            ret.append(t.toString());
+            if(!t.equals(subtasks.getLast()))
+            {
+                ret.append(", ");
+            }
+        }
+        ret.append(" ]");
+        return ret.toString();
+    }
 }

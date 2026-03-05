@@ -47,7 +47,12 @@
             </constraints>
             <properties/>
             <border type="none"/>
-            <children/>
+            <children>
+              <component id="d2b08" class="javax.swing.JTable" binding="tasksTable">
+                <constraints/>
+                <properties/>
+              </component>
+            </children>
           </scrollpane>
         </children>
       </tabbedpane>
