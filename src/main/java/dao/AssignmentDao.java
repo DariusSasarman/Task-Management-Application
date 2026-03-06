@@ -40,8 +40,8 @@ public class AssignmentDao implements Serializable {
 
     public void addTaskToEmployeeList(Employee target, Task added)
     {
-        if(target == null) throw new RuntimeException("Target Employee does not exist.");
-        map.get(target).add(added);
+        if(target == null) throw new RuntimeException("Target employee does not exist.");
+        if(added == null) throw new RuntimeException("Target task does not exist.");
         if(!map.containsKey(target))
         {
             map.put(target,new ArrayList<>());
@@ -52,6 +52,7 @@ public class AssignmentDao implements Serializable {
     public List<Task> getTaskList( Employee target)
     {
         if(target == null) throw new RuntimeException("Target Employee does not exist.");
+        if(!map.containsKey(target))return new ArrayList<>();
         return this.map.get(target);
     }
 }

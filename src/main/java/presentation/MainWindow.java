@@ -37,6 +37,7 @@ public class MainWindow extends JFrame {
 
     private JScrollPane tasksJScrollPane;
     private JTable tasksTable;
+    private JTable assignedTasksTable;
 
 
     public MainWindow() {
@@ -103,6 +104,10 @@ public class MainWindow extends JFrame {
             new RemoveTaskDialog(handler).setVisible(true);
             loadTasks();
         });
+        assignTaskToEmployeeButton.addActionListener(e -> {
+            new SelectEmployeeToRecieveTasksDialog(handler).setVisible(true);
+            loadAssignedTasks();
+        });
     }
 
     private void loadTasks() {
@@ -113,7 +118,7 @@ public class MainWindow extends JFrame {
         model.addColumn("Estimated Duration");
         model.addColumn("Visual Representation");
         List<Task> list = handler.getTasks();
-        for(Task t : list){
+        for (Task t : list) {
             model.addRow(new Object[]{
                     t.getIdTask(),
                     t.getStatusTask(),
@@ -139,7 +144,19 @@ public class MainWindow extends JFrame {
     }
 
     private void loadAssignedTasks() {
-
+        assignedTasksTable.setModel(new DefaultTableModel());
+        DefaultTableModel model = (DefaultTableModel) assignedTasksTable.getModel();
+        model.addColumn("Employee UUID");
+        model.addColumn("Employee name");
+        model.addColumn("Assigned Tasks");
+        List<Employee> list = handler.getEmployees();
+        for(Employee e : list){
+            model.addRow(new Object[]{
+                    e.getIdEmployee(),
+                    e.getName(),
+                    handler.getAssignedTaskListString(e)
+            });
+        }
     }
 
     {
@@ -163,6 +180,8 @@ public class MainWindow extends JFrame {
         panel1.add(tabbedPane1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(960, 540), new Dimension(960, 540), null, 0, false));
         assignedTasksJScrollPane = new JScrollPane();
         tabbedPane1.addTab("Assigned Tasks", assignedTasksJScrollPane);
+        assignedTasksTable = new JTable();
+        assignedTasksJScrollPane.setViewportView(assignedTasksTable);
         employeesJScrollPane = new JScrollPane();
         tabbedPane1.addTab("Employees", employeesJScrollPane);
         employeeTable = new JTable();

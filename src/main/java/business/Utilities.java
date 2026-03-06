@@ -2,9 +2,7 @@ package business;
 
 import dao.AssignmentDao;
 import dao.EntityDao;
-import entities.ComplexTask;
 import entities.Employee;
-import entities.SimpleTask;
 import entities.Task;
 
 import java.util.*;
@@ -63,5 +61,37 @@ public class Utilities {
 
     public void removeTask(Task added) {
         taskManager.removeTask(added);
+    }
+
+    public void assignTasks(Employee target, List<Task> assignments) {
+        for(Task t : assignments)
+        {
+            taskManager.assignTaskToEmployee(target.getIdEmployee(),t);
+        }
+    }
+
+    public String getAssignedTaskListString(Employee e) {
+        StringBuilder ret = new StringBuilder();
+        ret.append('[');
+        List<Task> tasks = getAssignedTaskList(e);
+        if(tasks.isEmpty())
+        {
+            ret.append("none]");
+            return ret.toString();
+        }
+        for(Task t : tasks)
+        {
+            ret.append(t.toString());
+            if(!t.equals(tasks.getLast()))
+            {
+                ret.append(", ");
+            }
+        }
+        ret.append(']');
+        return ret.toString();
+    }
+
+    public List<Task> getAssignedTaskList(Employee target) {
+        return taskManager.getAssignedTasks(target);
     }
 }

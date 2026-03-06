@@ -5,6 +5,7 @@ import dao.EntityDao;
 import entities.Employee;
 import entities.Task;
 
+import java.util.ArrayList;
 import java.util.List;
 
 class TasksManagement {
@@ -90,5 +91,9 @@ class TasksManagement {
 
     public void removeTask(Task added) {
         entityStorage.removeTask(added);
+    }
+
+    public List<Task> getAssignedTasks(Employee e) {
+        return new ArrayList<>(assignmentStorage.getTaskList(e));
     }
 }

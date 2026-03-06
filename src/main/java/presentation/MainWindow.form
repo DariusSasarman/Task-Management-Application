@@ -24,7 +24,12 @@
             </constraints>
             <properties/>
             <border type="none"/>
-            <children/>
+            <children>
+              <component id="dd4e5" class="javax.swing.JTable" binding="assignedTasksTable">
+                <constraints/>
+                <properties/>
+              </component>
+            </children>
           </scrollpane>
           <scrollpane id="1faf2" binding="employeesJScrollPane">
             <constraints>
