@@ -1,5 +1,6 @@
 package dao;
 
+import entities.ComplexTask;
 import entities.Employee;
 import entities.Task;
 
@@ -74,8 +75,24 @@ public class EntityDao implements Serializable {
 
     public List<Task> getTaskList() { return new ArrayList<>(tasks.values());}
 
-    public void removeTask(Task added) {
-        if(!tasks.containsKey(added.getIdTask())) return;
-        tasks.remove(added.getIdTask());
+    public void removeTask(Task target) {
+        if(!tasks.containsKey(target.getIdTask())) return;
+        tasks.remove(target.getIdTask());
+
+        /// Complex tasks might still hold a reference
+        /// To the simple task at hand
+        /// Which would prevent the garbage collector
+        /// To delete the instance completely
+
+        for(Task t : tasks.values())
+        {
+            if(t instanceof ComplexTask)
+            {
+                if (((ComplexTask) t).containsTask(target))
+                {
+                    ((ComplexTask) t).removeTask(target);
+                }
+            }
+        }
     }
 }

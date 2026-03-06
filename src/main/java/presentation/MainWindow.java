@@ -99,6 +99,10 @@ public class MainWindow extends JFrame {
             new SelectTaskTypeDialog(handler).setVisible(true);
             loadTasks();
         });
+        deleteTaskButton.addActionListener(e -> {
+            new RemoveTaskDialog(handler).setVisible(true);
+            loadTasks();
+        });
     }
 
     private void loadTasks() {
