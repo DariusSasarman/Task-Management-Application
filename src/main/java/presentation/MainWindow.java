@@ -91,22 +91,31 @@ public class MainWindow extends JFrame {
         addEmployeeButton.addActionListener(e -> {
             new AddEmployeeDialog(handler).setVisible(true);
             loadEmployeeData();
+            loadAssignedTasks();
         });
         deleteEmployeeButton.addActionListener(e -> {
             new RemoveEmployeeDialog(handler).setVisible(true);
             loadEmployeeData();
+            loadAssignedTasks();
         });
         addTaskButton.addActionListener(e -> {
             new SelectTaskTypeDialog(handler).setVisible(true);
             loadTasks();
+            loadAssignedTasks();
         });
         deleteTaskButton.addActionListener(e -> {
             new RemoveTaskDialog(handler).setVisible(true);
+            loadAssignedTasks();
             loadTasks();
         });
         assignTaskToEmployeeButton.addActionListener(e -> {
             new SelectEmployeeToRecieveTasksDialog(handler).setVisible(true);
             loadAssignedTasks();
+        });
+        modifyTaskStatusButton.addActionListener(e -> {
+            new ModifyAssignedTaskStatusDialog(handler).setVisible(true);
+            loadAssignedTasks();
+            loadTasks();
         });
     }
 

@@ -4,7 +4,6 @@ import business.Utilities;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import entities.Employee;
 import entities.Task;
 
 import javax.swing.*;
@@ -13,19 +12,17 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SelectTasksToBeAssignedToEmployeeDialog extends JDialog {
-    private Employee target;
+public class ModifyAssignedTaskStatusDialog extends JDialog {
     private Utilities handler;
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
-    private JLabel JLabel1;
-    private JScrollPane taskListJScrollPane;
+    private JLabel jLabelRecommendation;
+    private JScrollPane jScrollPane;
     private JPanel taskListJPanel;
     private ArrayList<JCheckBox> jCheckBoxes;
 
-    public SelectTasksToBeAssignedToEmployeeDialog(Utilities handler, Employee target) {
-        this.target = target;
+    public ModifyAssignedTaskStatusDialog(Utilities handler) {
         this.handler = handler;
         setContentPane(contentPane);
         taskListJPanel.setLayout(new BoxLayout(taskListJPanel, BoxLayout.Y_AXIS));
@@ -35,12 +32,13 @@ public class SelectTasksToBeAssignedToEmployeeDialog extends JDialog {
         getRootPane().setDefaultButton(buttonOK);
 
         jCheckBoxes = new ArrayList<>();
-        List<Task> list = handler.getTasks();
-        list.removeAll(handler.getEmployeeAssignedTaskList(target));
-        for (Task t : list) {
-            if(t.getStatusTask().equals("Completed"))continue;
-            jCheckBoxes.add(new JCheckBox(String.valueOf(t.getIdTask())));
+        for (Task t : this.handler.getAllAssignedTaskList()) {
+            JCheckBox added = new JCheckBox(String.valueOf(t.getIdTask()));
+            jCheckBoxes.add(added);
             taskListJPanel.add(jCheckBoxes.getLast());
+            if (t.getStatusTask().equals("Completed")) {
+                added.setVisible(false);
+            }
         }
 
         buttonOK.addActionListener(new ActionListener() {
@@ -83,15 +81,17 @@ public class SelectTasksToBeAssignedToEmployeeDialog extends JDialog {
             }
         }
         if (!anyChecked) {
-            JOptionPane.showMessageDialog(null, "Please select at least a task as component", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-        else {
-            handler.assignTasks(target,assignments);
+            JOptionPane.showMessageDialog(null, "Please select at least a task to be changed.", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            for (Task t : assignments) {
+                t.setStatusTask("Completed");
+            }
         }
         dispose();
     }
 
     private void onCancel() {
+        // add your code here if necessary
         dispose();
     }
 
@@ -129,15 +129,14 @@ public class SelectTasksToBeAssignedToEmployeeDialog extends JDialog {
         final JPanel panel3 = new JPanel();
         panel3.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
         contentPane.add(panel3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        JLabel1 = new JLabel();
-        JLabel1.setText("Please select the tasks the employee will be assigned:");
-        panel3.add(JLabel1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, 1, 1, null, null, null, 0, false));
-        taskListJScrollPane = new JScrollPane();
-        taskListJScrollPane.setHorizontalScrollBarPolicy(31);
-        panel3.add(taskListJScrollPane, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(-1, 300), new Dimension(-1, 300), null, 0, false));
+        jLabelRecommendation = new JLabel();
+        jLabelRecommendation.setText("Which task has been completed?");
+        panel3.add(jLabelRecommendation, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        jScrollPane = new JScrollPane();
+        panel3.add(jScrollPane, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(-1, 500), new Dimension(-1, 500), null, 0, false));
         taskListJPanel = new JPanel();
-        taskListJPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-        taskListJScrollPane.setViewportView(taskListJPanel);
+        taskListJPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        jScrollPane.setViewportView(taskListJPanel);
     }
 
     /**

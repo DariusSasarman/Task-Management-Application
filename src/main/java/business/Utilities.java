@@ -13,7 +13,7 @@ public class Utilities {
 
     public Utilities()
     {
-        this.taskManager = new TasksManagement(EntityDao.loadInformation(),AssignmentDao.loadInformation());
+        this.taskManager = TasksManagement.loadInformation();
     }
 
     public List<Employee> getRanking()
@@ -73,7 +73,7 @@ public class Utilities {
     public String getAssignedTaskListString(Employee e) {
         StringBuilder ret = new StringBuilder();
         ret.append('[');
-        List<Task> tasks = getAssignedTaskList(e);
+        List<Task> tasks = getEmployeeAssignedTaskList(e);
         if(tasks.isEmpty())
         {
             ret.append("none]");
@@ -91,7 +91,17 @@ public class Utilities {
         return ret.toString();
     }
 
-    public List<Task> getAssignedTaskList(Employee target) {
+    public List<Task> getEmployeeAssignedTaskList(Employee target) {
         return taskManager.getAssignedTasks(target);
+    }
+
+    public List<Task> getAllAssignedTaskList()
+    {
+        ArrayList<Task> ret = new ArrayList<>();
+        for(Employee e : taskManager.getEmployeeList())
+        {
+            ret.addAll(taskManager.getAssignedTasks(e));
+        }
+        return ret;
     }
 }
