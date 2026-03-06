@@ -5,18 +5,39 @@ import dao.EntityDao;
 import entities.Employee;
 import entities.Task;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-class TasksManagement {
+class TasksManagement  implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     private AssignmentDao assignmentStorage;
     private EntityDao entityStorage;
 
-    public TasksManagement(EntityDao EntityStorage, AssignmentDao AssignmentStorage)
+    public TasksManagement()
     {
-        this.assignmentStorage = AssignmentStorage;
-        this.entityStorage = EntityStorage;
+        this.assignmentStorage = new AssignmentDao();
+        this.entityStorage = new EntityDao();
+    }
+
+    public void securePersistence()
+    {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("Data.dat"))) {
+            oos.writeObject(this);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static TasksManagement loadInformation()
+    {
+        try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream("Data.dat"))) {
+            return (TasksManagement) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            return new TasksManagement();
+        }
     }
 
     public void assignTaskToEmployee(int idEmployee, Task added)
@@ -70,11 +91,6 @@ class TasksManagement {
         return count;
     }
 
-    public void securePersistence() {
-        assignmentStorage.securePersistence();
-        entityStorage.securePersistence();
-    }
-
     public void addEmployee(Employee added) {
         entityStorage.addEmployee(added);
     }
@@ -91,6 +107,7 @@ class TasksManagement {
 
     public void removeTask(Task added) {
         entityStorage.removeTask(added);
+        assignmentStorage.removeTask(added);
     }
 
     public List<Task> getAssignedTasks(Employee e) {

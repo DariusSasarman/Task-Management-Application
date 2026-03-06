@@ -17,28 +17,10 @@ public class EntityDao implements Serializable {
     private Map<Integer, Employee> employees;
     private Map<Integer, Task> tasks;
 
-    private EntityDao()
+    public EntityDao()
     {
         this.employees = new HashMap<>();
         this.tasks = new HashMap<>();
-    }
-
-    public void securePersistence()
-    {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("EntityData.dat"))) {
-            oos.writeObject(this);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static EntityDao loadInformation()
-    {
-        try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream("EntityData.dat"))) {
-            return (EntityDao) ois.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            return new EntityDao();
-        }
     }
 
     public Employee getEmployee(int idEmployee) {

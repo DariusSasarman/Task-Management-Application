@@ -20,24 +20,6 @@ public class AssignmentDao implements Serializable {
         this.map = new HashMap<>();
     }
 
-    public void securePersistence()
-    {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("AssignmentData.dat"))) {
-            oos.writeObject(this);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static AssignmentDao loadInformation()
-    {
-        try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream("AssignmentData.dat"))) {
-            return (AssignmentDao) ois.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            return new AssignmentDao();
-        }
-    }
-
     public void addTaskToEmployeeList(Employee target, Task added)
     {
         if(target == null) throw new RuntimeException("Target employee does not exist.");
@@ -54,5 +36,12 @@ public class AssignmentDao implements Serializable {
         if(target == null) throw new RuntimeException("Target Employee does not exist.");
         if(!map.containsKey(target))return new ArrayList<>();
         return this.map.get(target);
+    }
+
+    public void removeTask(Task added) {
+        for(Employee e : map.keySet())
+        {
+            map.get(e).remove(added);
+        }
     }
 }
