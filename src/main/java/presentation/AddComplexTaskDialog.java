@@ -23,7 +23,7 @@ public class AddComplexTaskDialog extends JDialog {
     private JScrollPane taskListJScrollPane;
     private JPanel taskListJPanel;
     private ArrayList<JCheckBox> jCheckBoxes;
-
+    private ArrayList<Task> taskArrayList;
     public AddComplexTaskDialog(Utilities handler) {
         this.handler = handler;
         setContentPane(contentPane);
@@ -34,10 +34,12 @@ public class AddComplexTaskDialog extends JDialog {
         getRootPane().setDefaultButton(buttonOK);
 
         jCheckBoxes = new ArrayList<>();
+        taskArrayList = new ArrayList<>();
 
         for (Task t : handler.getTasks()) {
             jCheckBoxes.add(new JCheckBox(String.valueOf(t.getIdTask())));
             taskListJPanel.add(jCheckBoxes.getLast());
+            taskArrayList.add(t);
         }
 
         buttonOK.addActionListener(new ActionListener() {
@@ -94,7 +96,7 @@ public class AddComplexTaskDialog extends JDialog {
             {
                 anyChecked = true;
                 int index = jCheckBoxes.indexOf(jCheckBox);
-                added.addTask(handler.getTasks().get(index));
+                added.addTask(taskArrayList.get(index));
             }
         }
         if(!anyChecked)

@@ -21,6 +21,7 @@ public class ModifyAssignedTaskStatusDialog extends JDialog {
     private JScrollPane jScrollPane;
     private JPanel taskListJPanel;
     private ArrayList<JCheckBox> jCheckBoxes;
+    private ArrayList<Task> checkList;
 
     public ModifyAssignedTaskStatusDialog(Utilities handler) {
         this.handler = handler;
@@ -32,9 +33,11 @@ public class ModifyAssignedTaskStatusDialog extends JDialog {
         getRootPane().setDefaultButton(buttonOK);
 
         jCheckBoxes = new ArrayList<>();
+        checkList = new ArrayList<>();
         for (Task t : this.handler.getAllAssignedTaskList()) {
             JCheckBox added = new JCheckBox(String.valueOf(t.getIdTask()));
             jCheckBoxes.add(added);
+            checkList.add(t);
             taskListJPanel.add(jCheckBoxes.getLast());
             if (t.getStatusTask().equals("Completed")) {
                 added.setVisible(false);
@@ -77,7 +80,7 @@ public class ModifyAssignedTaskStatusDialog extends JDialog {
             if (jCheckBox.isSelected()) {
                 anyChecked = true;
                 int index = jCheckBoxes.indexOf(jCheckBox);
-                assignments.add(handler.getTasks().get(index));
+                assignments.add(checkList.get(index));
             }
         }
         if (!anyChecked) {

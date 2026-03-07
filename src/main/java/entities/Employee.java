@@ -23,18 +23,4 @@ public final class Employee implements Serializable {
         return name;
     }
 
-    /// Overridden because these objects are stored
-    /// in hashmaps, and this solves persistence issues
-    ///
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Employee e)) return false;
-        return idEmployee == e.idEmployee;
-    }
-
-    @Override
-    public int hashCode() {
-        return Integer.hashCode(idEmployee);
-    }
 }

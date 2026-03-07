@@ -51,6 +51,16 @@ public final class ComplexTask extends Task{
     }
 
     @Override
+    public void setStatusTask(String statusTask)
+    {
+        super.setStatusTask(statusTask);
+        for(Task t : getSubtasks())
+        {
+            t.setStatusTask(statusTask);
+        }
+    }
+
+    @Override
     public int estimateDuration() {
         int sum = 0;
         for (Task t : subtasks)

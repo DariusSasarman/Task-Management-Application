@@ -34,15 +34,4 @@ public abstract sealed class Task implements Serializable permits SimpleTask,Com
 
     public abstract int estimateDuration();
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Task t)) return false;
-        return idTask == t.getIdTask();
-    }
-
-    @Override
-    public int hashCode() {
-        return Integer.hashCode(idTask);
-    }
 }
