@@ -18,6 +18,7 @@ public final class ComplexTask extends Task{
         this.subtasks = new ArrayList<>();
     }
 
+    /// List modifier methods
     public void addTask(Task added)
     {
         if(added == this) return;
@@ -29,6 +30,31 @@ public final class ComplexTask extends Task{
         subtasks.add(added);
     }
 
+    public void removeTask(Task target)
+    {
+        subtasks.remove(target);
+        List<ComplexTask> emptyComplexTasks = new ArrayList<>();
+        for(Task t : subtasks)
+        {
+            if(t instanceof ComplexTask)
+            {
+                ((ComplexTask) t).removeTask(target);
+                if(((ComplexTask)t).getSubtasks().isEmpty())
+                {
+                    emptyComplexTasks.add(((ComplexTask)t));
+                }
+            }
+        }
+        subtasks.removeAll(emptyComplexTasks);
+    }
+
+    /// List getter method
+    public List<Task> getSubtasks()
+    {
+        return this.subtasks;
+    }
+
+    /// This checks down the tree if the complex Task contains the target task
     public boolean containsTask(Task target) {
         for (Task t : subtasks) {
             if (t == target) return true;
@@ -40,15 +66,6 @@ public final class ComplexTask extends Task{
         return false;
     }
 
-    public void removeTask(Task target)
-    {
-        subtasks.remove(target);
-    }
-
-    public List<Task> getSubtasks()
-    {
-        return this.subtasks;
-    }
 
     @Override
     public void setStatusTask(String statusTask)
@@ -56,6 +73,8 @@ public final class ComplexTask extends Task{
         super.setStatusTask(statusTask);
         for(Task t : getSubtasks())
         {
+            /// Completion Status is inherited down
+            /// the task tree
             t.setStatusTask(statusTask);
         }
     }

@@ -64,7 +64,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="a8d30" class="javax.swing.JList" binding="taskList" custom-create="true">
+              <component id="a8d30" class="javax.swing.JList" binding="taskJList" custom-create="true">
                 <constraints/>
                 <properties/>
               </component>

@@ -40,6 +40,7 @@ public final class SimpleTask extends Task{
     public int estimateDuration() {
         return endHour - startHour;
     }
+
     @Override
     public String toString()
     {

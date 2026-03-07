@@ -23,7 +23,7 @@ public class SelectTasksToBeAssignedToEmployeeDialog extends JDialog {
     private JScrollPane taskListJScrollPane;
     private JPanel taskListJPanel;
     private ArrayList<JCheckBox> jCheckBoxes;
-
+    private ArrayList<Task> taskArrayList;
     public SelectTasksToBeAssignedToEmployeeDialog(Utilities handler, Employee target) {
         this.target = target;
         this.handler = handler;
@@ -35,14 +35,18 @@ public class SelectTasksToBeAssignedToEmployeeDialog extends JDialog {
         getRootPane().setDefaultButton(buttonOK);
 
         jCheckBoxes = new ArrayList<>();
-        List<Task> list = handler.getTasks();
-        list.removeAll(handler.getEmployeeAssignedTaskList(target));
-        for (Task t : list) {
-            if(t.getStatusTask().equals("Completed"))continue;
-            jCheckBoxes.add(new JCheckBox(String.valueOf(t.getIdTask())));
-            taskListJPanel.add(jCheckBoxes.getLast());
-        }
+        taskArrayList = new ArrayList<>();
+        ArrayList<Task> list = new ArrayList<>(handler.getTasks());
 
+        list.removeAll(handler.getEmployeeAssignedTaskList(target));
+        list.removeIf(t -> t.getStatusTask().equals("Completed"));
+
+        for (Task t : list) {
+            JCheckBox added = new JCheckBox(String.valueOf(t.getIdTask()));
+            jCheckBoxes.add(added);
+            taskListJPanel.add(added);
+            taskArrayList.add(t);
+        }
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 onOK();
@@ -79,9 +83,10 @@ public class SelectTasksToBeAssignedToEmployeeDialog extends JDialog {
             if (jCheckBox.isSelected()) {
                 anyChecked = true;
                 int index = jCheckBoxes.indexOf(jCheckBox);
-                assignments.add(handler.getTasks().get(index));
+                assignments.add(taskArrayList.get(index));
             }
         }
+
         if (!anyChecked) {
             JOptionPane.showMessageDialog(null, "Please select at least a task as component", "Error", JOptionPane.ERROR_MESSAGE);
         }

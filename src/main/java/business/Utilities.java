@@ -1,7 +1,5 @@
 package business;
 
-import dao.AssignmentDao;
-import dao.EntityDao;
 import entities.Employee;
 import entities.Task;
 
@@ -16,6 +14,7 @@ public class Utilities {
         this.taskManager = TasksManagement.loadInformation();
     }
 
+    /// Required Methods
     public List<Employee> getRanking()
     {
         List<Employee> returned = taskManager.getEmployeeList();
@@ -36,11 +35,13 @@ public class Utilities {
         return returned;
     }
 
+    /// Persistence method - called when closing
     public void save()
     {
         taskManager.securePersistence();
     }
 
+    /// Crud Entity Methods
     public void addEmployee(Employee added) {
         taskManager.addEmployee(added);
     }
@@ -63,6 +64,8 @@ public class Utilities {
         taskManager.removeTask(added);
     }
 
+    /// Assigned Task Methods
+
     public void assignTasks(Employee target, List<Task> assignments) {
         for(Task t : assignments)
         {
@@ -70,7 +73,11 @@ public class Utilities {
         }
     }
 
-    public String getAssignedTaskListString(Employee e) {
+    public List<Task> getEmployeeAssignedTaskList(Employee target) {
+        return taskManager.getAssignedTasks(target);
+    }
+
+    public String getAssignedTaskListToString(Employee e) {
         StringBuilder ret = new StringBuilder();
         ret.append('[');
         List<Task> tasks = getEmployeeAssignedTaskList(e);
@@ -91,11 +98,7 @@ public class Utilities {
         return ret.toString();
     }
 
-    public List<Task> getEmployeeAssignedTaskList(Employee target) {
-        return taskManager.getAssignedTasks(target);
-    }
-
-    public List<Task> getAllAssignedTaskList()
+    public List<Task> getAllTasksAssignedList()
     {
         ArrayList<Task> ret = new ArrayList<>();
         for(Employee e : taskManager.getEmployeeList())

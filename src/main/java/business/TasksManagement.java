@@ -22,6 +22,8 @@ class TasksManagement  implements Serializable {
         this.entityStorage = new EntityDao();
     }
 
+    /// Persistence Methods
+
     public void securePersistence()
     {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("Data.dat"))) {
@@ -39,6 +41,8 @@ class TasksManagement  implements Serializable {
             return new TasksManagement();
         }
     }
+
+    /// Required Methods
 
     public void assignTaskToEmployee(int idEmployee, Task added)
     {
@@ -63,9 +67,6 @@ class TasksManagement  implements Serializable {
         return returnedSum;
     }
 
-    public List<Employee> getEmployeeList() {
-        return entityStorage.getEmployeeList();
-    }
 
     public Integer getCompletedCount(int idEmployee) {
         Integer count = 0;
@@ -91,11 +92,18 @@ class TasksManagement  implements Serializable {
         return count;
     }
 
+    /// Entity DAO methods
+
     public void addEmployee(Employee added) {
         entityStorage.addEmployee(added);
     }
 
+    public List<Employee> getEmployeeList() {
+        return entityStorage.getEmployeeList();
+    }
+
     public void removeEmployee(Employee target) {
+        assignmentStorage.removeEmployee(target);
         entityStorage.removeEmployee(target);
     }
 

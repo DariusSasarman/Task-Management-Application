@@ -24,6 +24,7 @@ public class AddComplexTaskDialog extends JDialog {
     private JPanel taskListJPanel;
     private ArrayList<JCheckBox> jCheckBoxes;
     private ArrayList<Task> taskArrayList;
+
     public AddComplexTaskDialog(Utilities handler) {
         this.handler = handler;
         setContentPane(contentPane);
@@ -37,8 +38,9 @@ public class AddComplexTaskDialog extends JDialog {
         taskArrayList = new ArrayList<>();
 
         for (Task t : handler.getTasks()) {
-            jCheckBoxes.add(new JCheckBox(String.valueOf(t.getIdTask())));
-            taskListJPanel.add(jCheckBoxes.getLast());
+            JCheckBox added = new JCheckBox(String.valueOf(t.getIdTask()));
+            jCheckBoxes.add(added);
+            taskListJPanel.add(added);
             taskArrayList.add(t);
         }
 

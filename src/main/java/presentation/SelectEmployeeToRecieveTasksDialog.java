@@ -18,7 +18,8 @@ public class SelectEmployeeToRecieveTasksDialog extends JDialog {
     private JButton buttonOK;
     private JButton buttonCancel;
     private JScrollPane JScrollPane1;
-    private JList employeeList;
+    private JList employeeJList;
+    private List<Employee> employeeList;
 
     public SelectEmployeeToRecieveTasksDialog(Utilities handler) {
         this.handler = handler;
@@ -60,11 +61,11 @@ public class SelectEmployeeToRecieveTasksDialog extends JDialog {
 
     private void onOK() {
         // add your code here
-        int index = employeeList.getSelectedIndex();
+        int index = employeeJList.getSelectedIndex();
         if (index == -1) {
             JOptionPane.showMessageDialog(this, "Please select a target employee!", "Error", JOptionPane.ERROR_MESSAGE);
         } else {
-            Employee target = handler.getEmployees().get(index);
+            Employee target = employeeList.get(index);
             new SelectTasksToBeAssignedToEmployeeDialog(this.handler,target).setVisible(true);
         }
         dispose();
@@ -105,7 +106,7 @@ public class SelectEmployeeToRecieveTasksDialog extends JDialog {
         contentPane.add(panel3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         JScrollPane1 = new JScrollPane();
         panel3.add(JScrollPane1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-        JScrollPane1.setViewportView(employeeList);
+        JScrollPane1.setViewportView(employeeJList);
     }
 
     /**
@@ -117,9 +118,10 @@ public class SelectEmployeeToRecieveTasksDialog extends JDialog {
 
     private void createUIComponents() {
         List<String> list = new ArrayList<>();
-        for (Employee e : handler.getEmployees()) {
+        employeeList = handler.getEmployees();
+        for (Employee e : employeeList) {
             list.add(e.getName());
         }
-        employeeList = new JList(list.toArray());
+        employeeJList = new JList(list.toArray());
     }
 }

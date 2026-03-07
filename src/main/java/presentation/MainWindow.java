@@ -169,7 +169,7 @@ public class MainWindow extends JFrame {
             model.addRow(new Object[]{
                     e.getIdEmployee(),
                     e.getName(),
-                    handler.getAssignedTaskListString(e)
+                    handler.getAssignedTaskListToString(e)
             });
         }
     }

@@ -23,6 +23,8 @@ public class EntityDao implements Serializable {
         this.tasks = new HashMap<>();
     }
 
+
+    /// Employee DAO methods
     public Employee getEmployee(int idEmployee) {
         return employees.get(idEmployee);
     }
@@ -42,6 +44,8 @@ public class EntityDao implements Serializable {
     }
 
     public List<Employee> getEmployeeList() { return new ArrayList<>(employees.values());}
+
+    /// Task DAO methods
 
     public Task getTask(int idTask) {
         return tasks.get(idTask);
@@ -66,15 +70,30 @@ public class EntityDao implements Serializable {
         /// Which would prevent the garbage collector
         /// To delete the instance completely
 
+        List<ComplexTask> emptyComplexTasks = new ArrayList<>();
+
         for(Task t : tasks.values())
         {
             if(t instanceof ComplexTask)
             {
-                if (((ComplexTask) t).containsTask(target))
+                ComplexTask complexTask = (ComplexTask) t;
+                if (complexTask.containsTask(target))
                 {
-                    ((ComplexTask) t).removeTask(target);
+                    complexTask.removeTask(target);
+
+                }
+                /// This might delete the last task inside it
+                /// An empty complex task isn't a task at all
+                if(complexTask.getSubtasks().isEmpty())
+                {
+                    emptyComplexTasks.add(complexTask);
                 }
             }
         }
+        for(ComplexTask t : emptyComplexTasks)
+        {
+            tasks.remove(t.getIdTask());
+        }
+
     }
 }

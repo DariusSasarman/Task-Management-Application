@@ -1,5 +1,6 @@
 package dao;
 
+import entities.ComplexTask;
 import entities.Employee;
 import entities.Task;
 
@@ -38,10 +39,34 @@ public class AssignmentDao implements Serializable {
         return this.map.get(target);
     }
 
-    public void removeTask(Task added) {
+    public void removeTask(Task target) {
         for(Employee e : map.keySet())
         {
-            map.get(e).remove(added);
+            List<Task> taskList = map.get(e);
+            List<ComplexTask> emptyComplexTaskList = new ArrayList<>();
+            taskList.remove(target);
+
+            /// Complex task handling.
+            for(Task t : taskList)
+            {
+                if(t instanceof ComplexTask)
+                {
+                    ComplexTask complexTask = (ComplexTask) t;
+                    if (complexTask.containsTask(target))
+                    {
+                        complexTask.removeTask(target);
+                    }
+                    if(complexTask.getSubtasks().isEmpty())
+                    {
+                        emptyComplexTaskList.add(complexTask);
+                    }
+                }
+            }
+            taskList.removeAll(emptyComplexTaskList);
         }
+
+    }
+    public void removeEmployee(Employee target) {
+        map.remove(target);
     }
 }

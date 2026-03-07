@@ -64,7 +64,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="a8d30" class="javax.swing.JList" binding="employeeList" custom-create="true" default-binding="true">
+              <component id="a8d30" class="javax.swing.JList" binding="employeeJList" custom-create="true" default-binding="true">
                 <constraints/>
                 <properties/>
               </component>
