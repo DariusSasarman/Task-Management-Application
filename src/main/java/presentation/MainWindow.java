@@ -117,6 +117,9 @@ public class MainWindow extends JFrame {
             loadAssignedTasks();
             loadTasks();
         });
+        employeeRankingButton.addActionListener(e ->{
+            new DisplayEmployeeRankingDialog(handler.getRanking()).setVisible(true);
+        });
     }
 
     private void loadTasks() {
