@@ -120,6 +120,9 @@ public class MainWindow extends JFrame {
         employeeRankingButton.addActionListener(e ->{
             new DisplayEmployeeRankingDialog(handler.getRanking()).setVisible(true);
         });
+        employeeStatusButton.addActionListener(e ->{
+            new DisplayEmployeeStatus(handler.getStatus()).setVisible(true);
+        });
     }
 
     private void loadTasks() {
