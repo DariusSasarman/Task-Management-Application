@@ -29,11 +29,13 @@ public class DisplayEmployeeRankingDialog extends JDialog {
         model.addColumn("Ranking");
         model.addColumn("UUID");
         model.addColumn("Name");
+        model.addColumn("Total Work Done");
         for (Employee e : ranking) {
             model.addRow(new Object[]{
                     ranking.indexOf(e) + 1,
                     e.getIdEmployee(),
-                    e.getName()
+                    e.getName(),
+                    "" /// TODO : Add handler for total work done.
             });
         }
 
