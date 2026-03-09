@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EntityDao implements Serializable {
+class EntityDao implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;

@@ -11,7 +11,7 @@ public class Utilities {
 
     public Utilities()
     {
-        this.taskManager = TasksManagement.loadInformation();
+        this.taskManager = new TasksManagement();
     }
 
     /// Required Methods
