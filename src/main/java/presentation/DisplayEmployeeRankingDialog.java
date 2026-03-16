@@ -1,5 +1,6 @@
 package presentation;
 
+import business.Utilities;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
@@ -10,6 +11,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
+import java.util.Map;
 
 public class DisplayEmployeeRankingDialog extends JDialog {
     private JPanel contentPane;
@@ -17,7 +19,7 @@ public class DisplayEmployeeRankingDialog extends JDialog {
     private JTable displayTable;
     private JScrollPane jScrollPane;
 
-    public DisplayEmployeeRankingDialog(List<Employee> ranking) {
+    public DisplayEmployeeRankingDialog(List<Employee> ranking, Map<Integer,Integer> totalWorkDone) {
         setContentPane(contentPane);
         pack();
         setLocationRelativeTo(null);
@@ -35,7 +37,7 @@ public class DisplayEmployeeRankingDialog extends JDialog {
                     ranking.indexOf(e) + 1,
                     e.getIdEmployee(),
                     e.getName(),
-                    "" /// TODO : Add handler for total work done.
+                    totalWorkDone.get(e.getIdEmployee())
             });
         }
 

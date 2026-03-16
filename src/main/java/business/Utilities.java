@@ -107,4 +107,18 @@ public class Utilities {
         }
         return ret;
     }
+
+    public Map<Integer, Integer> getTotalWorkDone() {
+        HashMap<Integer,Integer> ret = new HashMap<>();
+        for(Employee e : taskManager.getEmployeeList())
+        {
+            Integer sum = 0;
+            for(Task t : taskManager.getAssignedTasks(e))
+            {
+                sum += t.estimateDuration();
+            }
+            ret.put(e.getIdEmployee(),sum);
+        }
+        return ret;
+    }
 }
