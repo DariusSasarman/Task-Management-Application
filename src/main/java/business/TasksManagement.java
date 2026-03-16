@@ -93,8 +93,8 @@ class TasksManagement  implements Serializable {
         return storage.getTaskList();
     }
 
-    public void removeTask(Task added) {
-        storage.removeTask(added);
+    public void removeTask(Task target) {
+        storage.removeTask(target);
     }
 
     public List<Task> getAssignedTasks(Employee e) {

@@ -20,7 +20,7 @@ public class Utilities {
         List<Employee> returned = taskManager.getEmployeeList();
         returned.removeIf((Employee e) -> taskManager.calculateEmployeeWorkDuration(e.getIdEmployee()) < 40);
         returned.sort(Comparator.comparing((Employee e) -> taskManager.calculateEmployeeWorkDuration(e.getIdEmployee())));
-        return returned;
+        return returned.reversed();
     }
 
     public Map<String, Map<String,Integer>> getStatus()
@@ -60,8 +60,8 @@ public class Utilities {
         return taskManager.getTaskList();
     }
 
-    public void removeTask(Task added) {
-        taskManager.removeTask(added);
+    public void removeTask(Task removed) {
+        taskManager.removeTask(removed);
     }
 
     /// Assigned Task Methods
@@ -108,16 +108,11 @@ public class Utilities {
         return ret;
     }
 
-    public Map<Integer, Integer> getTotalWorkDone() {
+    public Map<Integer, Integer> getListOfTotalWorkDone() {
         HashMap<Integer,Integer> ret = new HashMap<>();
         for(Employee e : taskManager.getEmployeeList())
         {
-            Integer sum = 0;
-            for(Task t : taskManager.getAssignedTasks(e))
-            {
-                sum += t.estimateDuration();
-            }
-            ret.put(e.getIdEmployee(),sum);
+            ret.put(e.getIdEmployee(),taskManager.calculateEmployeeWorkDuration(e.getIdEmployee()));
         }
         return ret;
     }

@@ -19,6 +19,7 @@ public class MetaDao implements Serializable {
         this.assignmentStorage = new AssignmentDao();
         this.entityStorage = new EntityDao();
     }
+
     public void securePersistence()
     {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("Data.dat"))) {
@@ -45,6 +46,10 @@ public class MetaDao implements Serializable {
         return entityStorage.getTask(idTask);
     }
 
+    public void addEmployee(Employee added) {
+        entityStorage.addEmployee(added);
+    }
+
     public void addTask(Task added) {
         entityStorage.addTask(added);
     }
@@ -57,9 +62,6 @@ public class MetaDao implements Serializable {
         return assignmentStorage.getTaskList(target);
     }
 
-    public void addEmployee(Employee added) {
-        entityStorage.addEmployee(added);
-    }
 
     public List<Employee> getEmployeeList() {
         return entityStorage.getEmployeeList();
